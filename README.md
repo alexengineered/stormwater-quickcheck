@@ -127,19 +127,31 @@ stormwater_app/
 - requests >= 2.31.0
 - reportlab >= 4.0.0
 
-## Feedback
-
-Found a bug or have a suggestion? [Send feedback](mailto:alexkabbourg@gmail.com)
-
-## License
-
-MIT License - See LICENSE file for details.
 
 ## Acknowledgments
 
 - **City of Seattle** — Stormwater Manual and rainfall data
 - **King County** — Surface Water Design Manual
 - **OpenStreetMap** — Geocoding services
+
+  ## License
+
+Free to use and adapt for internal business, personal, or educational use.
+Please don’t sell it or turn it into a paid product.
+
+Licensed under Creative Commons Attribution–NonCommercial 4.0 (CC BY-NC 4.0)
+
+
+## Acknowledgments
+
+- **City of Seattle** — Stormwater Manual and rainfall data
+- **King County** — Surface Water Design Manual
+- **OpenStreetMap** — Geocoding services
+
+
+## Feedback
+
+Found a bug or have a suggestion? Send feedback to contact@alexengineered.com
 
 ---
 
