@@ -318,18 +318,18 @@ def calculate_rational_method(
     # Add warnings for edge cases
     if total_area_acres > MAX_AREA_ACRES_EXTENDED:
         warnings.append(
-            f"âš ï¸ Area ({total_area_acres:.1f} acres) exceeds {MAX_AREA_ACRES_EXTENDED} acres. "
+            f"⚠️ Area ({total_area_acres:.1f} acres) exceeds {MAX_AREA_ACRES_EXTENDED} acres. "
             f"Rational Method not appropriate. Use continuous simulation (WWHM) per King County/Seattle requirements."
         )
     elif total_area_acres > MAX_AREA_ACRES_STRICT:
         warnings.append(
-            f"âš ï¸ Area ({total_area_acres:.1f} acres) exceeds {MAX_AREA_ACRES_STRICT} acres. "
+            f"⚠️ Area ({total_area_acres:.1f} acres) exceeds {MAX_AREA_ACRES_STRICT} acres. "
             f"King County/Seattle limit Rational Method to <10 acres for conveyance sizing. "
             f"Consider continuous simulation (WWHM) for permit applications."
         )
 
     if weighted_c > 0.95:
-        warnings.append("âš ï¸ Very high runoff coefficient (C > 0.95). Verify surface types are correct.")
+        warnings.append("⚠️ Very high runoff coefficient (C > 0.95). Verify surface types are correct.")
 
     if not is_local_data:
         warnings.append("âš ï¸ Using Seattle default rainfall data. Verify intensity for your specific jurisdiction.")
@@ -611,6 +611,34 @@ def apply_custom_css():
     [data-testid="stMetricValue"], [data-testid="stMetricLabel"] {
         color: #ffffff !important;
     }
+        
+    /* Main container */
+   .stApp {
+  background: linear-gradient(
+    135deg,
+    #0a0a12,
+    #1a1a2e,
+    #16213e,
+    #0f3460,
+    #1a1a2e,
+    #2d2d44,
+    #0a0a12
+  );
+  background-size: 400% 400%;
+  animation: stormShimmer 12s ease infinite;
+  min-height: 100vh;
+  width: 100%;
+}
+
+@keyframes stormShimmer {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 50% 100%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
+          font-family: 'Open Sans', sans-serif;
+    }
     
     /* Input fields - dark text on white background */
     .stTextInput input, .stNumberInput input {
@@ -666,13 +694,7 @@ def apply_custom_css():
         background: rgba(6, 26, 55, 0.20) !important;
         color: #ffffff !important;
     }
-    
-    /* Main container */
-    .stApp {
-        background: linear-gradient(to top, #0f2027, #203a43, #2c5364);
-        font-family: 'Open Sans', sans-serif;
-    }
-    
+
     /* Header styling */
     .main-header {
         font-family: 'Exo 2', sans-serif;
@@ -716,8 +738,8 @@ def apply_custom_css():
     }
     
     /* Buttons */
-    .stButton > button {
-        background: linear-gradient(180deg, #1c7585 0%, #104e57 100%) !important;
+.stButton > button {
+    background: linear-gradient(180deg, #4a5fd9 0%, #2d3a8c 100%) !important;
         color: #0a1628 !important;
         font-family: 'Exo 2', sans-serif !important;
         font-weight: 700 !important;
@@ -727,15 +749,14 @@ def apply_custom_css():
         border: none !important;
         border-radius: 8px !important;
         padding: 15px 40px !important;
-        box-shadow: 0 2px 6px rgba(0, 212, 255, 0.4) !important;
+        box-shadow: 0 2px 6px rgba(74, 95, 217, 0.4) !important;
         transition: all 0.3s ease !important;
     }
     
     .stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 6px 25px rgba(0, 212, 255, 0.6) !important;
+        box-shadow: 0 6px 25px rgba(74, 95, 217, 0.6) !important;
     }
-    
 
     /* Results section */
     .results-card {
@@ -771,12 +792,12 @@ def apply_custom_css():
         text-align: center;
     }
     
-    /* Warning boxes */
-    .stAlert {
-        background: linear-gradient(180deg, #1c7585 0%, #104e57 100%) !important;
-        border-color: #104e57 !important;
-    }
-    
+/* Warning boxes */
+.stAlert {
+    background: linear-gradient(180deg, #4a5fd9 0%, #2d3a8c 100%) !important;
+    border-color: #6b7ceb !important;
+}
+
     /* Success boxes */
     .element-container .stSuccess {
         background: rgba(0, 212, 255, 0.15) !important;
@@ -879,9 +900,9 @@ def apply_custom_css():
     
     /* Falling drop */
     .drop {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: rgba(255, 255, 255, 0.15);
         width: 2px;
-        height: 30px;
+        height: 18px;
         position: absolute;
         top: calc(50% - 30px);
         left: calc(50% - 1.5px);
@@ -913,8 +934,9 @@ def apply_custom_css():
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1; 
-    max-width: 300px; 
+     transform: rotateX(75deg); 
 }
+
     /* Ripple waves */
     .waves > div {
         position: absolute;
@@ -923,7 +945,7 @@ def apply_custom_css():
         right: 0;
         bottom: 0;
         border-radius: 50%;
-        border: solid rgba(255, 255, 255, 0.17) 7px;
+        border: solid rgba(255, 255, 255, 0.3) 7px;
         animation-name: spread;
         animation-duration: var(--duration);
         animation-delay: var(--delay);
