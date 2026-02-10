@@ -149,12 +149,9 @@ def get_recommended_duration(tc_minutes: float) -> int:
 # GEOCODING
 # =============================================================================
 
-@st.cache_data(ttl=3600, show_spinner=False)  # Cache for 1 hour
+@st.cache_data(ttl=3600, show_spinner=False)
 def geocode_address(address: str) -> Optional[Tuple[float, float, str]]:
-    """
-    Convert address to coordinates using Nominatim (OpenStreetMap).
-    Returns (latitude, longitude, display_name) or None if failed.
-    """
+    """Convert address to coordinates using Nominatim (OpenStreetMap)."""
     if not address or not address.strip():
         return None
 
@@ -167,7 +164,7 @@ def geocode_address(address: str) -> Optional[Tuple[float, float, str]]:
             "countrycodes": "us"
         }
         headers = {"User-Agent": "StormwaterQuickCheck/1.0 (civil-engineering-tool)"}
-        response = requests.get(url, params=params, headers=headers, timeout=10)
+        response = requests.get(url, params=params, headers=headers, timeout=30)  # Increased to 30
         response.raise_for_status()
         data = response.json()
 
@@ -177,14 +174,11 @@ def geocode_address(address: str) -> Optional[Tuple[float, float, str]]:
                 float(data[0]["lon"]),
                 data[0].get("display_name", address)
             )
+        print(f"Geocoding: No results for '{address}'")  # Debug log
         return None
-    except requests.exceptions.Timeout:
+    except Exception as e:
+        print(f"Geocoding error for '{address}': {type(e).__name__}: {e}")  # Debug log
         return None
-    except requests.exceptions.RequestException:
-        return None
-    except (KeyError, ValueError, IndexError):
-        return None
-
 
 # =============================================================================
 # RAINFALL DATA FUNCTIONS
@@ -1466,7 +1460,7 @@ def main():
             Data: Seattle Stormwater Manual (2021), Table F.18 | King County SWDM (2021)
         </p>
 <p style="margin-top: 6rem; color: rgb(28, 117, 133) !important;">
-  Created by AlexEngineered. <br/>I'd love your feedback or suggestions.<br/>
+  Created by  <a style="color: #7ec8e3;" href="https://alexengineered.com>AlexEngineered. </a><br/>I'd love your feedback or suggestions.<br/>
   <a style="color: #7ec8e3;" href="https://docs.google.com/forms/d/e/1FAIpQLSdKmSf7U8lSopFQpIQgfGa3rfa6mwEBdpWWPuieIRk3vlGfrA/viewform" target="_blank">
     Send feedback via Google Forms
   </a>
