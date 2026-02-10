@@ -161,6 +161,7 @@ def geocode_address(address: str) -> Optional[Tuple[float, float, str]]:
     time.sleep(1)  # Nominatim rate limit: max 1 request/second
 
     try:
+        time.sleep(1)  #  only runs on cache miss
         url = "https://nominatim.openstreetmap.org/search"
         params = {
             "q": address.strip(),
