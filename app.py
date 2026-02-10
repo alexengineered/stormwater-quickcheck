@@ -1118,7 +1118,7 @@ def inject_rain_animation():
 def main():
     st.set_page_config(
         page_title="Stormwater Quick-Check",
-        page_icon="",
+        page_icon="🌧️",
         layout="centered",
         initial_sidebar_state="collapsed"
     )
@@ -1129,9 +1129,15 @@ def main():
     # Header
     st.markdown("""
     <h1 class="main-header">STORMWATER QUICK-CHECK</h1>
-    <p class="sub-header">Instant Runoff Estimator</p>
+    <p class="sub-header">Instant Runoff Estimator for Seattle/King County</p>
     """, unsafe_allow_html=True)
 
+    st.info(
+        "This tool uses embedded rainfall data from the **Seattle Stormwater Manual (2021)**. "
+        "Data is applicable for King County preliminary estimates. "
+        "The code is [open-source on **GitHub**](https://github.com/alexengineered/stormwater-quickcheck) "
+        "and can be adapted for other jurisdictions."
+    )
     # Initialize session state
     if 'surfaces' not in st.session_state:
         st.session_state.surfaces = [{"type": "Pavement and Roofs", "area": 10000.0}]
@@ -1146,41 +1152,8 @@ def main():
     if 'slope_percent' not in st.session_state:
         st.session_state.slope_percent = 2.0
 
-    # Location Input
-    st.markdown("### Project Location")
-
-    address = st.text_input(
-        "Project Address",
-        value=st.session_state.address_input,
-        placeholder="Type an address and press Enter",
-        help="Enter a street address within King County/Seattle",
-        key="address_field"
-    )
-
-    # Update session state
-    if address != st.session_state.address_input:
-        st.session_state.address_input = address
-
-    # Geocoding and coordinate handling
-    lat, lon, location_name = 47.6062, -122.3321, "Seattle, WA (default)"
-
-    # In the UI section where you handle geocoding results:
-    if address and address.strip():
-        geocode_result = geocode_address(address)
-        if geocode_result:
-            lat, lon, location_name = geocode_result
-            if is_in_king_county(lat, lon):
-                st.success(f"✓ Location found: {location_name[:70]}...")
-            else:
-                st.warning(f"⚠️ {location_name[:50]}... (outside King County - using Seattle rainfall data)")
-        else:
-            st.warning(
-                "⚠️ Could not geocode address. Using Seattle, WA coordinates. For accurate results, verify your project is within King County.")
-            # Keep using default Seattle coordinates
-    else:
-        st.info(
-            "💡 Using Seattle, WA default location. Enter an address above if your project is elsewhere in King County.")
-    # Time of Concentration Calculator (Optional)
+    # Set coordinates
+    lat, lon, location_name = 47.6062, -122.3321, "King County/Seattle, WA"
     st.markdown("### Time of Concentration (Optional)")
 
     use_tc = st.checkbox(
@@ -1471,9 +1444,13 @@ def main():
             Data: Seattle Stormwater Manual (2021), Table F.18 | King County SWDM (2021)
         </p>
 <p style="margin-top: 6rem; color: rgb(28, 117, 133) !important;">
-  Created by  <a style="color: #7ec8e3;" href="https://alexengineered.com>AlexEngineered. </a><br/>I'd love your feedback or suggestions.<br/>
+  Created by <a style="color: #7ec8e3;" href="https://alexengineered.com" target="_blank">AlexEngineered</a>.<br/>
+  I'd love your feedback or suggestions.<br/>
   <a style="color: #7ec8e3;" href="https://docs.google.com/forms/d/e/1FAIpQLSdKmSf7U8lSopFQpIQgfGa3rfa6mwEBdpWWPuieIRk3vlGfrA/viewform" target="_blank">
     Send feedback via Google Forms
+  </a><br/>
+  <a style="color: #7ec8e3;" href="https://github.com/alexengineered/stormwater-quickcheck" target="_blank">
+    View code on GitHub
   </a>
 </p>
 
