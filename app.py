@@ -149,11 +149,16 @@ def get_recommended_duration(tc_minutes: float) -> int:
 # GEOCODING
 # =============================================================================
 
+import time
+
+
 @st.cache_data(ttl=3600, show_spinner=False)
 def geocode_address(address: str) -> Optional[Tuple[float, float, str]]:
     """Convert address to coordinates using Nominatim (OpenStreetMap)."""
     if not address or not address.strip():
         return None
+
+    time.sleep(1)  # Nominatim rate limit: max 1 request/second
 
     try:
         url = "https://nominatim.openstreetmap.org/search"
@@ -163,8 +168,11 @@ def geocode_address(address: str) -> Optional[Tuple[float, float, str]]:
             "limit": 1,
             "countrycodes": "us"
         }
-        headers = {"User-Agent": "StormwaterQuickCheck/1.0 (civil-engineering-tool)"}
-        response = requests.get(url, params=params, headers=headers, timeout=30)  # Increased to 30
+        headers = {
+            "User-Agent": "StormwaterQuickCheck/1.0 (contact@alexengineered.com)",  # REQUIRED by Nominatim
+            "Referer": "https://stormwater-quickcheck.streamlit.app"
+        }
+        response = requests.get(url, params=params, headers=headers, timeout=30)
         response.raise_for_status()
         data = response.json()
 
@@ -174,10 +182,10 @@ def geocode_address(address: str) -> Optional[Tuple[float, float, str]]:
                 float(data[0]["lon"]),
                 data[0].get("display_name", address)
             )
-        print(f"Geocoding: No results for '{address}'")  # Debug log
         return None
     except Exception as e:
-        print(f"Geocoding error for '{address}': {type(e).__name__}: {e}")  # Debug log
+        import sys
+        sys.stderr.write(f"Geocoding error: {type(e).__name__}: {e}\n")
         return None
 
 # =============================================================================
@@ -1155,20 +1163,22 @@ def main():
     # Geocoding and coordinate handling
     lat, lon, location_name = 47.6062, -122.3321, "Seattle, WA (default)"
 
+    # In the UI section where you handle geocoding results:
     if address and address.strip():
         geocode_result = geocode_address(address)
         if geocode_result:
             lat, lon, location_name = geocode_result
-            # Check if in King County
             if is_in_king_county(lat, lon):
-                st.info(f" {location_name[:70]}...")
+                st.success(f"✓ Location found: {location_name[:70]}...")
             else:
-                st.warning(f" {location_name[:50]}... (outside King County - using Seattle rainfall data)")
+                st.warning(f"⚠️ {location_name[:50]}... (outside King County - using Seattle rainfall data)")
         else:
-            st.warning("Could not geocode address. Using Seattle, WA default coordinates.")
+            st.warning(
+                "⚠️ Could not geocode address. Using Seattle, WA coordinates. For accurate results, verify your project is within King County.")
+            # Keep using default Seattle coordinates
     else:
-        st.info("Seattle, WA is used by default. Enter an address to use your project location.")
-
+        st.info(
+            "💡 Using Seattle, WA default location. Enter an address above if your project is elsewhere in King County.")
     # Time of Concentration Calculator (Optional)
     st.markdown("### Time of Concentration (Optional)")
 
